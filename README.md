@@ -1,2 +1,26 @@
-# have-you-eaten-hye
-Check if those you care about have eaten. 
+# HYE-backend
+
+Backend of Have You Eaten?
+
+## Requirements
+
+Python
+
+- install 3.12.4 venv
+
+```
+source env/bin/activate
+```
+
+Pip
+
+- secure-smtplib
+- fastapi
+- bcrypt
+
+```
+pip install fastapi \
+            bcrypt \
+            pydantic \
+            secure-smtplib
+```
