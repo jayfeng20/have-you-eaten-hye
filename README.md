@@ -14,14 +14,17 @@ source env/bin/activate
 
 Pip
 
-- secure-smtplib
-- fastapi
-- bcrypt
+```
+pip install -r requirements.txt
+```
+
+OR if you prefer to do it manually
 
 ```
 pip install fastapi \
             uvicorn \
             bcrypt \
             pydantic \
-            secure-smtplib
+            secure-smtplib \
+            python-jose
 ```
