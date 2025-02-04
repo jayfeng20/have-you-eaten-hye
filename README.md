@@ -20,6 +20,7 @@ Pip
 
 ```
 pip install fastapi \
+            uvicorn \
             bcrypt \
             pydantic \
             secure-smtplib
