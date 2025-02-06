@@ -17,14 +17,3 @@ Pip
 ```
 pip install -r requirements.txt
 ```
-
-OR if you prefer to do it manually
-
-```
-pip install fastapi \
-            uvicorn \
-            bcrypt \
-            pydantic \
-            secure-smtplib \
-            python-jose
-```
