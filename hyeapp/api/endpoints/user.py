@@ -4,34 +4,19 @@ User-related endpoints.
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
-from api.deps import db_session
-from schemas.user import UserProfile, NicknameUpdate
-from dbcrud.user import get_user_by_username, update_user_nickname
+from schemas.user import UserCreate, UserProfile
+from dbcrud.user import create_user, get_user_by_email
+from db.session import get_db_session
+import logging
+from dataclasses import asdict
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
 
-# Endpoint to get user profile.
-@router.get("/{username}", response_model=UserProfile)
-async def read_user_profile(username: str, db: AsyncSession = Depends(db_session)):
-    user = await get_user_by_username(db, username)
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
-        )
-    return user
-
-
-# Endpoint to update user nickname.
-@router.put("/{username}/nickname", response_model=UserProfile)
-async def set_nickname(
-    username: str,
-    nickname_update: NicknameUpdate,
-    db: AsyncSession = Depends(db_session),
-):
-    user = await update_user_nickname(db, username, nickname_update)
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
-        )
-    return user
+@router.post("/signup", response_model=UserProfile, status_code=status.HTTP_201_CREATED)
+async def signup(user: UserCreate, db: AsyncSession = Depends(get_db_session)):
+    new_user = await create_user(db, user)
+    logging.info(f"New user created: {new_user}")
+    return UserProfile(**(asdict(new_user)))

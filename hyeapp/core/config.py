@@ -1,10 +1,10 @@
 import os
 from dotenv import load_dotenv
 
-load_dotenv()  # Load environment variables from .env
+load_dotenv()
 
 
-class Settings:
+class DatabaseConfig:
     DB_USERNAME: str = os.getenv("HYE_DB_USERNAME")
     DB_PASSWORD: str = os.getenv("HYE_DB_PASSWORD")
     DB_HOST: str = os.getenv("HYE_DB_HOST")
@@ -12,4 +12,4 @@ class Settings:
     DB_NAME: str = os.getenv("HYE_DB_NAME")
 
 
-settings = Settings()
+db_configuration = DatabaseConfig()

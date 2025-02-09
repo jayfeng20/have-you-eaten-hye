@@ -1,15 +1,33 @@
-from sqlalchemy import Column, Integer, String
-from sqlalchemy.ext.declarative import declarative_base
+"""
+Data model for Users Table in the database.
+"""
 
-Base = declarative_base()
+from datetime import datetime
+
+# from sqlalchemy import Column, Integer, String, TIMESTAMP
+# from sqlalchemy.ext.declarative import declarative_base
+from dataclasses import dataclass
 
 
-class User(Base):
-    """Base model for user profile"""
+@dataclass
+class Users:
+    """Data model for the Users table"""
 
-    __tablename__ = "users"
+    id: str
+    username: str
+    email: str
+    created_at: datetime
 
-    id = Column(Integer, primary_key=True, index=True)
-    username = Column(String, unique=True, index=True, nullable=False)
-    email = Column(String, unique=True, index=True, nullable=False)
-    nickname = Column(String, nullable=True)
+
+# Base = declarative_base()
+
+
+# class Users(Base):
+#     """Base model for user profile"""
+
+#     __tablename__ = "users"
+
+#     id = Column(String, primary_key=True, index=True)
+#     username = Column(String, unique=True, index=True, nullable=False)
+#     email = Column(String, unique=True, index=True, nullable=False)
+#     created_at = Column(TIMESTAMP, nullable=False)
