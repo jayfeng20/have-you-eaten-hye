@@ -1,3 +1,7 @@
+"""
+Database operations for user management.
+"""
+
 from passlib.context import CryptContext
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
@@ -72,3 +76,19 @@ async def create_user(db: AsyncSession, user: UserCreate) -> Users:
 async def get_user_by_email(db: AsyncSession, email: str):
     result = await db.execute(text(f"SELECT * FROM users WHERE email = {email}"))
     return result.scalar_one_or_none()
+
+
+async def check_username(username: str, db: AsyncSession) -> bool:
+    """Check if the username is already taken in the database"""
+    select_sql = text(
+        """
+        SELECT COUNT(1) as cnt FROM users WHERE username ILIKE :username
+    """
+    )
+    try:
+        result = await db.execute(select_sql, {"username": username})
+        available = result.fetchone()._mapping["cnt"] == 0
+    except SQLAlchemyError as e:
+        raise HTTPException(status_code=400, detail="username check failed.")
+
+    return available

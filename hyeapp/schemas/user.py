@@ -21,3 +21,9 @@ class UserCreate(BaseModel):
     email: EmailStr
     username: str
     id: str
+
+
+class UsernameCheckResponse(BaseModel):
+    """Response model for /checkUsername endpoint"""
+
+    available: bool
