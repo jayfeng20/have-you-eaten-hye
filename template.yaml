@@ -1,0 +1,79 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  hyeapp - FastAPI Application Deployed via AWS SAM on Lambda and API Gateway
+
+Globals:
+  Function:
+    Runtime: python3.12
+    Timeout: 30
+    MemorySize: 256
+    Tracing: Active
+    LoggingConfig:
+      LogFormat: JSON
+    Environment:
+      Variables:
+        POWERTOOLS_SERVICE_NAME: fastapiService
+        POWERTOOLS_LOG_LEVEL: INFO
+        TRACING: Active
+
+Resources:
+  FastAPIAppFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: hyeapp/
+      Handler: main.handler
+      Runtime: python3.12
+      Architectures:
+        - x86_64
+      Policies:
+        - AWSLambdaBasicExecutionRole
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /{proxy+} # Catch-all proxy path for all endpoints in the FastAPI app
+            Method: ANY
+            RestApiId: !Ref FastAPIRestApi
+      Environment:
+        Variables:
+          HYE_DB_USERNAME: !Ref HYE_DB_USERNAME
+          HYE_DB_PASSWORD: !Ref HYE_DB_PASSWORD
+          HYE_DB_NAME: !Ref HYE_DB_NAME
+          HYE_DB_HOST: !Ref HYE_DB_HOST
+          HYE_DB_PORT: !Ref HYE_DB_PORT
+          COGNITO_USER_POOL_ID: !Ref COGNITO_USER_POOL_ID
+          REGION: !Ref REGION
+  FastAPIRestApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      TracingEnabled: true
+      Cors:
+        AllowMethods: "'OPTIONS,GET,POST,PUT,DELETE'"
+        AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+        AllowOrigin: "'*'"
+
+  ApplicationResourceGroup:
+    Type: AWS::ResourceGroups::Group
+    Properties:
+      Name: !Sub "ApplicationInsights-SAM-${AWS::StackName}"
+      ResourceQuery:
+        Type: CLOUDFORMATION_STACK_1_0
+
+  ApplicationInsightsMonitoring:
+    Type: AWS::ApplicationInsights::Application
+    Properties:
+      ResourceGroupName: !Ref ApplicationResourceGroup
+      AutoConfigurationEnabled: "true"
+
+Outputs:
+  FastAPIEndpoint:
+    Description: "API Gateway endpoint URL for Prod stage for the FastAPI app"
+    Value: !Sub "https://${FastAPIRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
+  FastAPIAppFunctionArn:
+    Description: "FastAPI Lambda Function ARN"
+    Value: !GetAtt FastAPIAppFunction.Arn
+  FastAPIAppFunctionIamRole:
+    Description: "IAM Role ARN for the FastAPI Lambda function"
+    Value: !GetAtt FastAPIAppFunctionRole.Arn
