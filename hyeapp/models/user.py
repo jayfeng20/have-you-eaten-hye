@@ -17,17 +17,3 @@ class Users:
     username: str
     email: str
     created_at: datetime
-
-
-# Base = declarative_base()
-
-
-# class Users(Base):
-#     """Base model for user profile"""
-
-#     __tablename__ = "users"
-
-#     id = Column(String, primary_key=True, index=True)
-#     username = Column(String, unique=True, index=True, nullable=False)
-#     email = Column(String, unique=True, index=True, nullable=False)
-#     created_at = Column(TIMESTAMP, nullable=False)

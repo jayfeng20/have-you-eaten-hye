@@ -16,7 +16,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-async def create_user(db: AsyncSession, user: UserCreate) -> Users:
+async def create_user(db: AsyncSession, user: dict) -> Users:
     """
     Create a new user record in the database.
 
@@ -46,10 +46,11 @@ async def create_user(db: AsyncSession, user: UserCreate) -> Users:
 
     try:
         await db.execute(
-            insert_sql, {"email": user.email, "username": user.username, "id": user.id}
+            insert_sql,
+            {"email": user["email"], "username": user["username"], "id": user["id"]},
         )
         await db.commit()
-        result = await db.execute(select_sql, {"id": user.id})
+        result = await db.execute(select_sql, {"id": user["id"]})
         user_profile = dict(result.fetchone()._mapping)
 
         if user_profile is None:

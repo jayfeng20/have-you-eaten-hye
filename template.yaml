@@ -28,6 +28,18 @@ Resources:
         - x86_64
       Policies:
         - AWSLambdaBasicExecutionRole
+        - AWSLambdaVPCAccessExecutionRole
+      VpcConfig:
+        SubnetIds:
+          - subnet-0f64e41a060c0bab7
+          - subnet-0866b261991b68d30
+          - subnet-050925fdaf7c762ae
+          - subnet-047eacb30af5a54e9
+          - subnet-067a9812a90e9dcd9
+          - subnet-082ac0ee03d7ad206
+        SecurityGroupIds:
+          - sg-04d1c3b8efb98728d
+          - sg-09ccc352929cc46b0
       Events:
         Api:
           Type: Api
@@ -37,13 +49,14 @@ Resources:
             RestApiId: !Ref FastAPIRestApi
       Environment:
         Variables:
-          HYE_DB_USERNAME: !Ref HYE_DB_USERNAME
-          HYE_DB_PASSWORD: !Ref HYE_DB_PASSWORD
-          HYE_DB_NAME: !Ref HYE_DB_NAME
-          HYE_DB_HOST: !Ref HYE_DB_HOST
-          HYE_DB_PORT: !Ref HYE_DB_PORT
-          COGNITO_USER_POOL_ID: !Ref COGNITO_USER_POOL_ID
-          REGION: !Ref REGION
+          HYE_DB_USERNAME: "postgres"
+          HYE_DB_PASSWORD: "MaxOutPostAnalysis99"
+          HYE_DB_NAME: "hye"
+          HYE_DB_HOST: "hye.cd11c6bnabfd.us-east-2.rds.amazonaws.com"
+          HYE_DB_PORT: 5432
+          COGNITO_USER_POOL_ID: "us-east-2_j7TTNd6qj"
+          REGION: "us-east-2"
+          COGNITO_APP_CLIENT_ID: "37687bqb1t1t0osibaovkhctp2"
   FastAPIRestApi:
     Type: AWS::Serverless::Api
     Properties:

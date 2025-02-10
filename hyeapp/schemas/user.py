@@ -20,7 +20,6 @@ class UserProfile(BaseModel):
 class UserCreate(BaseModel):
     email: EmailStr
     username: str
-    id: str
 
 
 class UsernameCheckResponse(BaseModel):

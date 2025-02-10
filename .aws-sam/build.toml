@@ -5,7 +5,7 @@ codeuri = "/Users/j/Have you eaten? (HYE)/HYE-backend/hyeapp"
 runtime = "python3.12"
 architecture = "x86_64"
 handler = "main.handler"
-manifest_hash = "4a3423144df911b200790ae6fb14888e"
+manifest_hash = "be0bd696b0c740a7652e49897fc9459d"
 packagetype = "Zip"
 functions = ["FastAPIAppFunction"]
 
