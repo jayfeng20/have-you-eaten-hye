@@ -26,3 +26,9 @@ class UsernameCheckResponse(BaseModel):
     """Response model for /checkUsername endpoint"""
 
     available: bool
+
+
+class UserIdCheckResponse(BaseModel):
+    """Response model for /checkUserIdExistence endpoint"""
+
+    exists: bool

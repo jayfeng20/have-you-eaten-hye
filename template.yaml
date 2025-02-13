@@ -31,9 +31,6 @@ Resources:
         - AWSLambdaVPCAccessExecutionRole
       VpcConfig:
         SubnetIds:
-          - subnet-0f64e41a060c0bab7
-          - subnet-0866b261991b68d30
-          - subnet-050925fdaf7c762ae
           - subnet-047eacb30af5a54e9
           - subnet-067a9812a90e9dcd9
           - subnet-082ac0ee03d7ad206

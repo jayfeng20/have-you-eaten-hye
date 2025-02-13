@@ -93,3 +93,20 @@ async def check_username(username: str, db: AsyncSession) -> bool:
         raise HTTPException(status_code=400, detail="username check failed.")
 
     return available
+
+
+async def check_user_id_existence(user_id: str, db: AsyncSession):
+    """Check if the user with given user_id already exists in the database"""
+    select_sql = text(
+        """
+        SELECT COUNT(1) as cnt FROM users WHERE id = :user_id
+    """
+    )
+
+    try:
+        result = await db.execute(select_sql, {"user_id": user_id})
+        exist = result.fetchone()._mapping["cnt"] == 1
+    except SQLAlchemyError as e:
+        raise HTTPException(status_code=400, detail="user_id check failed.")
+
+    return exist

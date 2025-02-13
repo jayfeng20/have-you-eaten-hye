@@ -8,8 +8,14 @@ from schemas.user import (
     UserCreate,
     UserProfile,
     UsernameCheckResponse,
+    UserIdCheckResponse,
 )
-from dbcrud.user import create_user, get_user_by_email, check_username
+from dbcrud.user import (
+    create_user,
+    get_user_by_email,
+    check_username,
+    check_user_id_existence,
+)
 from db.session import get_db_session
 import logging
 from dataclasses import asdict
@@ -32,7 +38,6 @@ async def signup(
             "email": user.email,
             "username": user.username,
             "id": token_payload["sub"],
-            # "id": "1234",
         },
     )
     logging.info(f"New user created: {new_user}")
@@ -41,9 +46,23 @@ async def signup(
 
 @router.get("/checkUsername", response_model=UsernameCheckResponse)
 async def check_username_availability(
-    username: str, db: AsyncSession = Depends(get_db_session)
+    username: str,
+    token_payload: dict = Depends(verify_token),
+    db: AsyncSession = Depends(get_db_session),
 ):
     logging.info(f"Checking availability of username: {username}")
     available = await check_username(username, db)
     logging.info(f"Username {username} availability: {available}")
-    return UsernameCheckResponse(available=available)
+    return UsernameCheckResponse(available=available is not None)
+
+
+@router.get("/checkUserIdExistence", response_model=UserIdCheckResponse)
+async def check_user_id_existence(
+    user_id: str,
+    token_payload: dict = Depends(verify_token),
+    db: AsyncSession = Depends(get_db_session),
+):
+    logging.info(f"Checking if user_id exists: {user_id}")
+    exists = await check_user_id_existence(user_id, db)
+    logging.info(f"User id {user_id} existence: {exists}")
+    return UserIdCheckResponse(exists=exists is not None)
