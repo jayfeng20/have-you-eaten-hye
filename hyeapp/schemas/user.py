@@ -28,7 +28,7 @@ class UsernameCheckResponse(BaseModel):
     available: bool
 
 
-class UserIdCheckResponse(BaseModel):
-    """Response model for /checkUserIdExistence endpoint"""
+class UserEmailCheckResponse(BaseModel):
+    """Response model for /checkUserEmailExistence endpoint"""
 
     exists: bool

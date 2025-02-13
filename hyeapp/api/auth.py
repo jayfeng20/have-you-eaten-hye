@@ -74,6 +74,8 @@ async def verify_token(
             audience=AUDIENCE,
             issuer=ISSUER,
         )
+
+        logger.info("Token verification successful.")
         return payload
     except Exception as e:
         logger.error(f"Token verification failed: {e}", exc_info=True)

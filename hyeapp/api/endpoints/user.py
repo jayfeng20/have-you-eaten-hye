@@ -8,14 +8,9 @@ from schemas.user import (
     UserCreate,
     UserProfile,
     UsernameCheckResponse,
-    UserIdCheckResponse,
+    UserEmailCheckResponse,
 )
-from dbcrud.user import (
-    create_user,
-    get_user_by_email,
-    check_username,
-    check_user_id_existence,
-)
+import dbcrud.user as dbcruduser
 from db.session import get_db_session
 import logging
 from dataclasses import asdict
@@ -32,7 +27,7 @@ async def signup(
     token_payload: dict = Depends(verify_token),
     db: AsyncSession = Depends(get_db_session),
 ):
-    new_user = await create_user(
+    new_user = await dbcruduser.create_user(
         db,
         user={
             "email": user.email,
@@ -51,18 +46,18 @@ async def check_username_availability(
     db: AsyncSession = Depends(get_db_session),
 ):
     logging.info(f"Checking availability of username: {username}")
-    available = await check_username(username, db)
+    available = await dbcruduser.check_username_availability(username, db)
     logging.info(f"Username {username} availability: {available}")
-    return UsernameCheckResponse(available=available is not None)
+    return UsernameCheckResponse(available=available)
 
 
-@router.get("/checkUserIdExistence", response_model=UserIdCheckResponse)
-async def check_user_id_existence(
-    user_id: str,
+@router.get("/checkUserEmailExistence", response_model=UserEmailCheckResponse)
+async def check_user_email_existence(
+    userEmail: str,
     token_payload: dict = Depends(verify_token),
     db: AsyncSession = Depends(get_db_session),
 ):
-    logging.info(f"Checking if user_id exists: {user_id}")
-    exists = await check_user_id_existence(user_id, db)
-    logging.info(f"User id {user_id} existence: {exists}")
-    return UserIdCheckResponse(exists=exists is not None)
+    logging.info(f"Checking if user email exists: {userEmail}")
+    exists = await dbcruduser.check_user_email_existence(userEmail, db)
+    logging.info(f"User id {userEmail} existence: {exists}")
+    return UserEmailCheckResponse(exists=exists)

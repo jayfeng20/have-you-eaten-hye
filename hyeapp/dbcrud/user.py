@@ -79,7 +79,7 @@ async def get_user_by_email(db: AsyncSession, email: str):
     return result.scalar_one_or_none()
 
 
-async def check_username(username: str, db: AsyncSession) -> bool:
+async def check_username_availability(username: str, db: AsyncSession) -> bool:
     """Check if the username is already taken in the database"""
     select_sql = text(
         """
@@ -95,18 +95,22 @@ async def check_username(username: str, db: AsyncSession) -> bool:
     return available
 
 
-async def check_user_id_existence(user_id: str, db: AsyncSession):
+async def check_user_email_existence(user_email: str, db: AsyncSession) -> bool:
     """Check if the user with given user_id already exists in the database"""
     select_sql = text(
         """
-        SELECT COUNT(1) as cnt FROM users WHERE id = :user_id
+        SELECT COUNT(1) as cnt FROM users WHERE email = :email
     """
     )
 
     try:
-        result = await db.execute(select_sql, {"user_id": user_id})
-        exist = result.fetchone()._mapping["cnt"] == 1
+        result = await db.execute(select_sql, {"email": user_email})
+        print("result", result)
+        exists = result.fetchone()._mapping["cnt"] == 1
+        print("exists", exists)
     except SQLAlchemyError as e:
-        raise HTTPException(status_code=400, detail="user_id check failed.")
+        raise HTTPException(
+            status_code=400, detail="user_email existence request failed."
+        )
 
-    return exist
+    return exists
