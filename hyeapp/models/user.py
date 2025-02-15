@@ -17,3 +17,14 @@ class Users:
     username: str
     email: str
     created_at: datetime
+
+
+@dataclass
+class Friends:
+    """Data model for the Friends table"""
+
+    user_id: str
+    friend_id: str
+    created_at: datetime
+    updated_at: datetime
+    status: str
