@@ -32,36 +32,3 @@ class UserEmailCheckResponse(BaseModel):
     """Outgoing response model for /checkUserEmailExistence endpoint"""
 
     exists: bool
-
-
-class GetFriendListResponse(BaseModel):
-    """Outgoing response model for /getFriendList endpoint"""
-
-    friends: list[str]
-
-
-class GetFriendRequestListResponse(BaseModel):
-    """Outgoing response model for /getFriendRequestList endpoint"""
-
-    requests_sent: list[str]
-    requests_received: list[str]
-
-
-class SendFriendRequestResponse(BaseModel):
-    """
-    Outgoing response model for /sendFriendRequest endpoint
-    True, False if friend request sent successfully.
-    False, True if friend request already exists.
-    False, False if friend username does not exist.
-    """
-
-    friend_request_sent: bool
-    friend_request_already_exist: bool
-
-
-class AcceptFriendRequestResponse(BaseModel):
-    """
-    Outgoing response model for /acceptFriendRequest endpoint
-    """
-
-    friend_request_accepted: bool

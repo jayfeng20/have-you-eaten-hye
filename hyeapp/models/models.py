@@ -1,5 +1,5 @@
 """
-Data model for Users Table in the database.
+Data models for tables in the database.
 """
 
 from datetime import datetime
